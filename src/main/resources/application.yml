@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+# ── App Config ──────────────────────────────────────────────
+shortener:
+  base-url: http://localhost:8080
+  range:
+    size: 1000000       # Each server gets 1M IDs per range allocation
+  cache:
+    ttl-hours: 24       # Redis cache TTL for URL mappings
+
+# ── Cassandra ───────────────────────────────────────────────
+spring:
+  data:
+    cassandra:
+      keyspace-name: url_shortener
+      contact-points: localhost
+      port: 9042
+      local-datacenter: datacenter1
+      schema-action: create_if_not_exists
+
+  # ── Redis ─────────────────────────────────────────────────
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 2000ms       # Fail fast if Redis is slow
+    lettuce:
+      pool:
+        max-active: 50    # Connection pool size — tune based on load
+        max-idle: 10
+        min-idle: 5
+
+# ── Zookeeper ───────────────────────────────────────────────
+zookeeper:
+  connection-string: localhost:2181
+  session-timeout-ms: 30000
+  connection-timeout-ms: 15000
+
+# ── Actuator ────────────────────────────────────────────────
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
