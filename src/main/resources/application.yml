@@ -11,16 +11,16 @@ shortener:
 
 # ── Cassandra ───────────────────────────────────────────────
 spring:
-  data:
-    cassandra:
-      keyspace-name: url_shortener
-      contact-points: localhost
-      port: 9042
-      local-datacenter: datacenter1
-      schema-action: create_if_not_exists
+  cassandra:
+    keyspace-name: url_shortener
+    contact-points: localhost
+    port: 9042
+    local-datacenter: datacenter1
+    schema-action: create_if_not_exists
 
   # ── Redis ─────────────────────────────────────────────────
-  redis:
+  data:
+    redis:
     host: localhost
     port: 6379
     timeout: 2000ms       # Fail fast if Redis is slow
