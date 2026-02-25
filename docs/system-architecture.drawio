@@ -1,0 +1,106 @@
+<mxfile host="app.diagrams.net" agent="1.0" version="24.0.0">
+  <diagram name="System Architecture" id="system-arch">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Clients -->
+        <mxCell id="clients" value="Clients" style="shape=mxgraph.aws3.users;fillColor=#D2D3D3;strokeColor=#879196;fontSize=13;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="530" y="20" width="60" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Load Balancer -->
+        <mxCell id="lb" value="Load Balancer" style="rounded=1;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="490" y="120" width="140" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="clients" target="lb">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- App Servers Group -->
+        <mxCell id="app-group" value="" style="rounded=1;whiteSpace=wrap;dashed=1;dashPattern=5 5;strokeColor=#4D9900;fillColor=#E6FFE6;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="190" y="200" width="740" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="app-label" value="Application Servers (Horizontally Scalable)" style="text;fontSize=11;fontStyle=2;fontColor=#4D9900;" vertex="1" parent="1">
+          <mxGeometry x="390" y="203" width="300" height="20" as="geometry"/>
+        </mxCell>
+
+        <!-- Server 1 -->
+        <mxCell id="s1" value="Server 1&#xa;Range: 0 → 1M&#xa;Counter: AtomicLong" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="210" y="230" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Server 2 -->
+        <mxCell id="s2" value="Server 2&#xa;Range: 1M → 2M&#xa;Counter: AtomicLong" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="485" y="230" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- Server 3 -->
+        <mxCell id="s3" value="Server 3&#xa;Range: 2M → 3M&#xa;Counter: AtomicLong" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;align=center;" vertex="1" parent="1">
+          <mxGeometry x="760" y="230" width="150" height="70" as="geometry"/>
+        </mxCell>
+
+        <!-- LB to servers -->
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="lb" target="s1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="lb" target="s2">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#666666;strokeWidth=2;" edge="1" parent="1" source="lb" target="s3">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Base62 label -->
+        <mxCell id="b62" value="Base62 Encoder&#xa;(ID → 7-char code)" style="text;fontSize=10;fontStyle=2;fontColor=#6c8ebf;align=center;" vertex="1" parent="1">
+          <mxGeometry x="460" y="300" width="200" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- Redis Cache -->
+        <mxCell id="redis" value="Redis Cache&#xa;&#xa;Hot URLs (TTL 24h, LRU)&#xa;Rate Limit Counters" style="shape=cylinder3;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#FFE6E6;strokeColor=#CC0000;fontSize=11;fontStyle=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="260" y="390" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Cassandra -->
+        <mxCell id="cass" value="Cassandra Cluster&#xa;&#xa;Source of Truth&#xa;Partition Key: code&#xa;Write CL: QUORUM | Read CL: ONE" style="shape=cylinder3;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;fontStyle=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="530" y="390" width="220" height="110" as="geometry"/>
+        </mxCell>
+
+        <!-- Zookeeper -->
+        <mxCell id="zk" value="Zookeeper Cluster&#xa;&#xa;DistributedAtomicLong&#xa;Range Assignment" style="shape=cylinder3;whiteSpace=wrap;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#E6E6FF;strokeColor=#6666CC;fontSize=11;fontStyle=0;align=center;" vertex="1" parent="1">
+          <mxGeometry x="820" y="390" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <!-- Servers to Redis -->
+        <mxCell id="e5" value="1. Check cache&#xa;(~1ms)" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#CC0000;strokeWidth=1.5;fontSize=9;fontColor=#CC0000;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="s1" target="redis">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Servers to Cassandra -->
+        <mxCell id="e6" value="2. Cache miss?&#xa;Query DB (~5ms)" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#D6B656;strokeWidth=1.5;fontSize=9;fontColor=#B8860B;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="s2" target="cass">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Servers to Zookeeper -->
+        <mxCell id="e7" value="Allocate range&#xa;(once per 1M IDs)" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#6666CC;strokeWidth=1.5;fontSize=9;fontColor=#6666CC;labelBackgroundColor=#FFFFFF;" edge="1" parent="1" source="s3" target="zk">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Redis to Cassandra fallback -->
+        <mxCell id="e8" value="Fallback" style="dashed=1;strokeColor=#999999;strokeWidth=1;fontSize=9;fontColor=#999999;" edge="1" parent="1" source="redis" target="cass">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Flow labels -->
+        <mxCell id="flow-create" value="POST /shorten flow:&#xa;RangeService.getNextId() → Base62.encode() → Cassandra INSERT → Redis SET" style="text;fontSize=10;fontColor=#333333;align=left;verticalAlign=top;fillColor=#F5F5F5;rounded=1;strokeColor=#CCCCCC;spacingLeft=8;spacingTop=4;spacingRight=8;spacingBottom=4;" vertex="1" parent="1">
+          <mxGeometry x="20" y="550" width="450" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="flow-redirect" value="GET /{code} flow:&#xa;Redis GET → (miss?) Cassandra SELECT → Redis SET → HTTP 301 Redirect" style="text;fontSize=10;fontColor=#333333;align=left;verticalAlign=top;fillColor=#F5F5F5;rounded=1;strokeColor=#CCCCCC;spacingLeft=8;spacingTop=4;spacingRight=8;spacingBottom=4;" vertex="1" parent="1">
+          <mxGeometry x="500" y="550" width="430" height="40" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

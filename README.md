@@ -4,24 +4,7 @@ A high-performance URL shortening service designed to handle billions of URLs. B
 
 ### System Architecture
 
-```
-                         Clients
-                            |
-                      Load Balancer
-                            |
-              +-------------+-------------+
-              |             |             |
-          Server 1      Server 2      Server 3
-          Range: 0-1M   Range: 1M-2M  Range: 2M-3M
-              |             |             |
-              +------+------+------+------+
-                     |             |
-                Redis Cache    Cassandra Cluster
-              (hot URLs, TTL)  (source of truth)
-
-              Zookeeper Cluster
-              (range assignment for distributed ID generation)
-```
+![System Architecture](docs/system-architecture.png)
 
 ### How It Works
 
