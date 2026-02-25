@@ -8,6 +8,9 @@ shortener:
     size: 1000000       # Each server gets 1M IDs per range allocation
   cache:
     ttl-hours: 24       # Redis cache TTL for URL mappings
+  rate-limit:
+    max-requests: 10    # Max POST /shorten requests per window per IP
+    window-seconds: 60  # Window size in seconds
 
 # ── Cassandra ───────────────────────────────────────────────
 spring:
@@ -17,6 +20,10 @@ spring:
     port: 9042
     local-datacenter: datacenter1
     schema-action: create_if_not_exists
+    request:
+      consistency: quorum     # Write default: QUORUM (2/3 nodes confirm)
+                              # → safe against single node failure
+                              # Read CL is overridden per-query to LOCAL_ONE in repository
 
   # ── Redis ─────────────────────────────────────────────────
   data:
